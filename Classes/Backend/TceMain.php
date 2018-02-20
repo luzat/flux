@@ -492,8 +492,7 @@ class TceMain
 
         // Move the immediate record, which may itself be a placeholder or an original record.
         $row['uid'] = $uid;
-        $target = [$table, $destPid];
-        $this->contentService->moveRecord($row, $destPid, $target, $reference);
+        $this->contentService->moveRecord($row, $newColumnNumber, [], $reference);
         $this->recordService->update($table, $row);
         $reference->updateRefIndex($table, $uid);
 
@@ -508,7 +507,7 @@ class TceMain
             $row['t3ver_move_id'] > 0 ? $row['t3ver_move_id'] : $resolveUid
         );
         if ($mostRecentVersionOfRecord) {
-            $this->contentService->moveRecord($mostRecentVersionOfRecord, $destPid, $target, $reference);
+            $this->contentService->moveRecord($mostRecentVersionOfRecord, $newColumnNumber, [], $reference);
             $this->recordService->update($table, $mostRecentVersionOfRecord);
             $reference->updateRefIndex($table, $mostRecentVersionOfRecord['uid']);
         }
@@ -535,9 +534,6 @@ class TceMain
         // Following block takes care of updating the immediate record, be that a placeholder, an
         // original or a versioned copy.
         $moveData = $this->getMoveData();
-        if (!$moveData) {
-            return;
-        }
         $updateFields['uid'] = $uid;
 
         $this->contentService->moveRecord($updateFields, $origDestPid, $moveData, $reference);
@@ -560,7 +556,7 @@ class TceMain
         $this->moveChildPlaceholdersToPageUid([$resolveUid], $destPid);
         $mostRecentVersionOfRecord = $this->getMostRecentVersionOfRecord($table, $resolveUid);
         if ($mostRecentVersionOfRecord) {
-            $this->contentService->moveRecord($mostRecentVersionOfRecord, $origDestPid, $moveData, $reference);
+            $this->contentService->moveRecord($mostRecentVersionOfRecord, $origDestPid, [], $reference);
             $this->recordService->update($table, $mostRecentVersionOfRecord);
             $reference->updateRefIndex($table, $mostRecentVersionOfRecord['uid']);
         }
