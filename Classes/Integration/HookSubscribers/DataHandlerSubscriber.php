@@ -96,6 +96,10 @@ class DataHandlerSubscriber
 
     protected function cascadeCommandToChildRecords(string $table, int $id, string $command, $value, DataHandler $dataHandler)
     {
+        if ($table === 'pages') {
+            return;
+        }
+
         list (, $childRecords) = $this->getParentAndRecordsNestedInGrid(
             $table,
             (int)$id,
