@@ -96,7 +96,7 @@ class DataHandlerSubscriber
 
     protected function cascadeCommandToChildRecords(string $table, int $id, string $command, $value, DataHandler $dataHandler)
     {
-        if ($table === 'pages') {
+        if ($table === 'pages' || $table === 'pages_language_overlay') {
             return;
         }
 
